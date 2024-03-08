@@ -174,6 +174,7 @@ static void UserApp1SM_Idle(void)
   //loop count
   static u16 i=0;
   
+  
   static u16 button0pressed =0;
  
   static u16 loops = 0;
@@ -199,14 +200,23 @@ static void UserApp1SM_Idle(void)
       //tunrs on first pair/ turns off
      
       if(rand_num == 3){
+        
+        //set sound
+        PWMAudioSetFrequency(BUZZER1, 1175);
+        PWMAudioSetFrequency(BUZZER2, 587);
+        
         while(timer < 200000 )
         {
           LedOn(RED);
           LedOn(ORANGE);
+          PWMAudioOn(BUZZER1);
+          PWMAudioOn(BUZZER2);
           timer++;
         }
         LedOff(RED);
         LedOff(ORANGE);
+        PWMAudioOff(BUZZER1);
+        PWMAudioOff(BUZZER2);
       
         array[i] = 3;
         i++;
@@ -215,14 +225,23 @@ static void UserApp1SM_Idle(void)
     
     //tunrs on second pair/ turns off
       if(rand_num == 1){
+        
+        //set sound 
+        PWMAudioSetFrequency(BUZZER1, 880);
+        PWMAudioSetFrequency(BUZZER2, 440);
+        
         while(timer < 200000 )
         {
           LedOn(CYAN);
           LedOn(BLUE);
+          PWMAudioOn(BUZZER1);
+          PWMAudioOn(BUZZER2);
           timer++;
         }
         LedOff(CYAN);
         LedOff(BLUE);
+        PWMAudioOff(BUZZER1);
+        PWMAudioOff(BUZZER2);
     
         array[i] = 1;
         timer = 0;
@@ -231,14 +250,23 @@ static void UserApp1SM_Idle(void)
     
     //tunrs on third pair/ turns off
       if(rand_num == 2){
+        
+        //set sound 
+        PWMAudioSetFrequency(BUZZER1, 740);
+        PWMAudioSetFrequency(BUZZER2, 370);
+        
         while(timer < 200000 )
         {
           LedOn(YELLOW);
           LedOn(GREEN);
+          PWMAudioOn(BUZZER1);
+          PWMAudioOn(BUZZER2);
           timer++;
         }
         LedOff(YELLOW);
         LedOff(GREEN);
+        PWMAudioOff(BUZZER1);
+        PWMAudioOff(BUZZER2);
       
         array[i] = 2;
         timer = 0;
@@ -247,14 +275,23 @@ static void UserApp1SM_Idle(void)
       
       //turns on fourth pair/ turns off
       if(rand_num == 0){
+        
+        //set sound 
+        PWMAudioSetFrequency(BUZZER1, 131);
+        PWMAudioSetFrequency(BUZZER2, 65);
+        
         while(timer < 200000 )
         {
           LedOn(WHITE);
           LedOn(PURPLE);
+          PWMAudioOn(BUZZER1);
+          PWMAudioOn(BUZZER2);
           timer++;
         }
         LedOff(WHITE);
         LedOff(PURPLE);
+        PWMAudioOff(BUZZER1);
+        PWMAudioOff(BUZZER2);
       
         array[i] = 0;
         timer = 0;
