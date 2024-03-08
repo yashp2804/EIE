@@ -93,6 +93,18 @@ Promises:
 void UserApp1Initialize(void)
 {
   PWMAudioSetFrequency(BUZZER1,131);
+  
+  //initialize all unused LEDs to off
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN );
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
+  
+  
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -141,38 +153,179 @@ State Machine Function Definitions
 /* What does this state do? */
 static void UserApp1SM_Idle(void)
 {
-  static u32 timer;
-  if(IsButtonPressed(BUTTON0))
-  {
-    if(timer < 500)
-    {
-      
-      PWMAudioSetFrequency(BUZZER1,131);
-      PWMAudioOn(BUZZER1);
-    }
-    
-    timer++;
-    if(timer > 500)
-    {
-      PWMAudioOff(BUZZER1);
-      
-      PWMAudioSetFrequency(BUZZER1,1976);
-      PWMAudioOn(BUZZER1);
-    }
-    
-    if(timer > 1000)
-    {
-      timer = 0;
-    }
-    
-   
-  }
-  else
-  {
-    PWMAudioOff(BUZZER1);
+  //game location
+  static u16 game_state = 0;
+  //timer 
+  static u32 timer = 0;
+  //led output array
+  static u32 array[] = {0, 0, 0, 0};
+  //user input button array
+  static u32 user_array[] = {0, 0, 0, 0};
+  //cycles and counts through array
+  static u16 array_count = 0;
+  //run user start menu
+  static u16 run_menu = 0;
+  //i 4 for loop
+  static u8 array_compare = 0;
+  //correct array counter
+  static u32 correct_counter = 0;
+  //random number
+  static u16 rand_num = 0;
+  //loop count
+  static u16 i=0;
+  
+  static u16 button0pressed =0;
+ 
+  static u16 loops = 0;
+  loops ++;
+  if (loops == 65400){
+    loops=0;
   }
   
+  LcdCommand(LCD_CLEAR_CMD);
+  LcdMessage(LINE1_START_ADDR, "Press 0");
+  
+  if (game_state == 0 ){
+    
+    
+    if( WasButtonPressed(BUTTON0) || button0pressed == 1)
+    {
+      ButtonAcknowledge(BUTTON0);
+      button0pressed = 1;
+      
+      srand(1103515245 * loops + 12345);
+      rand_num = rand()%4;
+     
+      //tunrs on first pair/ turns off
+     
+      if(rand_num == 3){
+        while(timer < 200000 )
+        {
+          LedOn(RED);
+          LedOn(ORANGE);
+          timer++;
+        }
+        LedOff(RED);
+        LedOff(ORANGE);
+      
+        array[i] = 3;
+        i++;
+        timer = 0;
+       }
+    
+    //tunrs on second pair/ turns off
+      if(rand_num == 1){
+        while(timer < 200000 )
+        {
+          LedOn(CYAN);
+          LedOn(BLUE);
+          timer++;
+        }
+        LedOff(CYAN);
+        LedOff(BLUE);
+    
+        array[i] = 1;
+        timer = 0;
+        i++;
+      }
+    
+    //tunrs on third pair/ turns off
+      if(rand_num == 2){
+        while(timer < 200000 )
+        {
+          LedOn(YELLOW);
+          LedOn(GREEN);
+          timer++;
+        }
+        LedOff(YELLOW);
+        LedOff(GREEN);
+      
+        array[i] = 2;
+        timer = 0;
+        i++;
+      }
+      
+      //turns on fourth pair/ turns off
+      if(rand_num == 0){
+        while(timer < 200000 )
+        {
+          LedOn(WHITE);
+          LedOn(PURPLE);
+          timer++;
+        }
+        LedOff(WHITE);
+        LedOff(PURPLE);
+      
+        array[i] = 0;
+        timer = 0;
+        i++;
+      }
+      
+      //go to next game state
+      if(i >= 4){
+      game_state = 1;
+      }
+    }
+    
+  }
+  
+  
+  //user input 
+  if(game_state == 1 && array_count < 4){
+    
+    if( WasButtonPressed(BUTTON0) )
+    {
+      ButtonAcknowledge(BUTTON0);
+      user_array[array_count] = 0;
+      array_count++;
+    }
+    
+    if( WasButtonPressed(BUTTON1) )
+    {
+      ButtonAcknowledge(BUTTON1);
+      user_array[array_count] = 1;
+      array_count++;
+    }
+    
+    if( WasButtonPressed(BUTTON2) )
+    {
+      ButtonAcknowledge(BUTTON2);
+      user_array[array_count] = 2;
+      array_count++;
+    }
+    
+    if( WasButtonPressed(BUTTON3) )
+    {
+      ButtonAcknowledge(BUTTON3);
+      user_array[array_count] = 3;
+      array_count++;
+    }
+    
+    
+  }
+  
+  if (game_state ==1 && array_count >=4){
+    
+    static u8 j=0;
+    
+    if (array[j] != user_array[j]){
+      LedOn(RED);
+    }
+    
+    if(j==3 && array[j] == user_array[j]){
+      LedOn(GREEN);
+    }
+    
+    else{
+      j++;
+    }
+  }
 
+     
+  
+  
+    
+  
 } /* end UserApp1SM_Idle() */
      
 
