@@ -104,6 +104,7 @@ void UserApp1Initialize(void)
   LedOff(ORANGE);
   LedOff(RED);
   
+
   
   /* If good initialization, set state to Idle */
   if( 1 )
@@ -173,7 +174,16 @@ static void UserApp1SM_Idle(void)
   static u16 rand_num = 0;
   //loop count
   static u16 i=0;
+  //number correct 
+  static u32 correct = 0;
+  //number incorrect 
+  static u32 incorrect = 0;
   
+  //lcd on 
+  LedOn(LCD_RED);
+  LedOn(LCD_GREEN);
+  LedOn(LCD_BLUE);
+
   
   static u16 button0pressed =0;
  
@@ -346,22 +356,38 @@ static void UserApp1SM_Idle(void)
     static u8 j=0;
     
     if (array[j] != user_array[j]){
-      LedOn(RED);
+      LedOn(LCD_RED);
+      LedOff(LCD_GREEN);
+      LedOff(LCD_BLUE);
+      
+      incorrect = 1;
+      
     }
     
     if(j==3 && array[j] == user_array[j]){
-      LedOn(GREEN);
+      LedOff(LCD_RED);
+      LedOn(LCD_GREEN);
+      LedOff(LCD_BLUE);
+      
+      correct = 1;
+      
     }
     
     else{
       j++;
     }
-  }
-
-     
-  
-  
     
+    if(correct == 1)
+    {
+      LedOn(WHITE);
+    }
+    
+    if(incorrect == 1)
+    {
+      LedOn(RED);
+    }
+    
+  }
   
 } /* end UserApp1SM_Idle() */
      
